@@ -113,7 +113,8 @@ public:
   void Clear (void);
   void MAX7219_DisplayTestStop (void);
   void MAX7219_SetBrightness (char brightness);
-  void DisplayText(char *text, int justify);
+  void DisplayText(char *text, int justify, bool upsideDown = false);
+  void DisplayTextUpsideDown(char *text, int justify);
 
 };
 

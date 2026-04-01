@@ -9,7 +9,7 @@ void setup() {
   display.Begin();
   display.Clear();
   display.MAX7219_SetBrightness(8);
-  display.DisplayText("01234567", 0);
+  display.DisplayText("01234567", 0, true);
 
   tft.begin();
   tft.setRotation(1);

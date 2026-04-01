@@ -116,7 +116,7 @@ unsigned char MAX7219::MAX7219_LookupCode (char character, unsigned int dp)
   return 0;                                             
 }
 
-void MAX7219::DisplayText(char *text, int justify){
+void MAX7219::DisplayText(char *text, int justify, bool upsideDown){
   int decimal[16];
   char trimStr[16] = "";
   int x,y=0;
@@ -135,14 +135,41 @@ void MAX7219::DisplayText(char *text, int justify){
      }
   }
   if (y>8) y=8;
+  if (upsideDown){
+    for (x=0; x<y/2; x++){
+      char tmpChar = trimStr[x];
+      trimStr[x] = trimStr[y-1-x];
+      trimStr[y-1-x] = tmpChar;
+      int tmpDec = decimal[x];
+      decimal[x] = decimal[y-1-x];
+      decimal[y-1-x] = tmpDec;
+    }
+  }
   for (x=0;x<y;x++){
-      if (justify==0)
-        DisplayChar((int)(y-x+7-y),trimStr[x], decimal[x]);    
-      if (justify==1){
-        DisplayChar((int)(y-x+7-y-(8-y)),trimStr[x], decimal[x]);    
-        
+      int digit = (justify==0)
+        ? (int)(y-x+7-y)
+        : (int)(y-x+7-y-(8-y));
+      if (upsideDown){
+        byte code = MAX7219_LookupCode(trimStr[x], decimal[x]);
+        byte dp = code & 0x80;
+        byte pattern = code & 0x7f;
+        byte rotated = 0;
+        if (pattern & 0x40) rotated |= 0x08;
+        if (pattern & 0x20) rotated |= 0x04;
+        if (pattern & 0x10) rotated |= 0x02;
+        if (pattern & 0x08) rotated |= 0x40;
+        if (pattern & 0x04) rotated |= 0x20;
+        if (pattern & 0x02) rotated |= 0x10;
+        if (pattern & 0x01) rotated |= 0x01;
+        MAX7219_Write(digit+1, rotated | dp);
+      } else {
+        DisplayChar(digit,trimStr[x], decimal[x]);    
       }
   }
+}
+
+void MAX7219::DisplayTextUpsideDown(char *text, int justify){
+  DisplayText(text, justify, true);
 }
 
 void MAX7219::MAX7219_Write(volatile byte opcode, volatile byte data) {
