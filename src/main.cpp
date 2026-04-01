@@ -1,21 +1,23 @@
 #include <Arduino.h>
 #include "max7219.h"
+#include <TFT_eSPI.h>
 
 MAX7219 display;
+TFT_eSPI tft = TFT_eSPI();
 
 void setup() {
   display.Begin();
   display.Clear();
   display.MAX7219_SetBrightness(8);
+  display.DisplayText("01234567", 0);
 
-  // Test: accende una cifra alla volta
-  for (int digit = 0; digit < 8; digit++) {
-    display.Clear();
-    display.DisplayChar(digit, '8', false);  // accende tutti i segmenti della cifra
-    delay(500);
-  }
+  tft.begin();
+  tft.setRotation(1);
+  tft.fillScreen(TFT_BLACK);
+  tft.setTextColor(TFT_WHITE, TFT_BLACK);
+  tft.setTextSize(2);
+  tft.drawString("ILI9225 OK", 10, 10, 2);
 
-  display.Clear();
 }
 
 void loop() {
