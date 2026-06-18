@@ -1,0 +1,3 @@
+1、灵敏度测试 空速1.2k,频偏2k
+2、fsk与pingpong例程相比关闭了数据白化，修改了MOD_SHAPING_G_BT_01与MOD_SHAPING_G_BT_05
+与信号发生器保持一致
