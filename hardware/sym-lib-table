@@ -1,0 +1,3 @@
+(sym_lib_table
+  (lib (name "demoboard") (type "KiCad") (uri "${KIPRJMOD}/demoboard.kicad_sym") (options "") (descr "Project-local symbols: ILI9225_TFT, E77_900M22S"))
+)
